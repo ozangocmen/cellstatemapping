@@ -1,0 +1,90 @@
+---
+title: 'Objective 3 '
+author: "e-bruli"
+date: "2023-03-01"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+Installing Necessary Packages
+```{r}
+#install.packages("philentropy")
+library(philentropy)
+#install.packages("RColorBrewer")
+library(RColorBrewer)
+#install.packages("pheatmap")
+library(pheatmap)
+```
+
+Establishing a Color Palette
+```{r}
+colpal <- RColorBrewer::brewer.pal(9,"YlGnBu")
+```
+
+
+Bhattacharyya Distance: 
+```{r}
+calcbhatdist <- function(p,q) {
+  #p and q are the clusters
+  dist <- bhattacharyya(p,q,testNA = T, 
+                        unit = "log2", epsilon = 0.00001)
+  return(dist)
+}
+```
+
+
+```{r}
+
+bhatdist <- function(mat) {
+  #create empty matrix: it'll be the result matrix
+  #it's dimensions are nrow(mat)xnrow(mat)
+  final_bhdist <- matrix(, nrow= nrow(mat), ncol=nrow(mat))
+  #need 2 loop
+  #1st: to select P 
+  #2nd: make Bhat. calc with with q 
+  
+  for (i in 1:nrow(mat)) {
+    #select the cluster and calculate it's distance with the rest of the clusters
+    p <- c(mat[i,])
+    for (j in 1:nrow(mat)) {
+      #Perform the calculation 
+      q <- c(mat[j,])
+      final_bhdist[i,j] <- calcbhatdist(p,q)
+    }
+    
+  }
+  rownames(final_bhdist) <- rownames(mat)
+  colnames(final_bhdist) <- rownames(mat)
+  return(final_bhdist)
+
+} 
+```
+
+
+Plot the Heatmap:
+```{r}
+#pheatmap(bhatdist(), display_numbers=T, color = colpal)
+```
+
+
+Example 
+```{r}
+c1 <- c(0.1000,0.2000,0.800,0.500)
+c2 <- c(0.1001,0.2500,0.810,0.510)
+c3 <- c(1500,500,300,2000)
+
+matr <- matrix(c(c1,c2,c3), nrow = 3, ncol=4, byrow=T)
+rownames(matr) <- c("c1","c2","c3")
+colnames(matr) <- c("Gene B","Gene M","Gene G","Gene L")
+matr
+```
+
+```{r}
+bhatdist(matr)
+```
+```{r}
+pheatmap(bhatdist(matr), display_numbers=T, color = colpal)
+```
+
+
