@@ -60,7 +60,7 @@
   
 </div>
 <p>
-This repository's purpose is developing a stand alone package which will reveal cancer associated immune cells states with unsupervised machine learning algorithms. Here methods are derived from this paper: _Bachireddy et. al. (2021). Mapping the evolution of T cell states during response and resistance to adoptive cellular therapy. Cell Reports, 37(6), 109992._ https://doi.org/10.1016/j.celrep.2021.109992</p> 
+This repository's purpose is developing a stand alone package which will reveal cancer associated immune cells states with unsupervised machine learning algorithms. Here methods are derived from this paper: Bachireddy et. al. (2021). Mapping the evolution of T cell states during response and resistance to adoptive cellular therapy. Cell Reports, 37(6), 109992._ https://doi.org/10.1016/j.celrep.2021.109992</p> 
 
 <p>Software included mainly R and Python functions.</p>
 
