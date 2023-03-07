@@ -1,0 +1,88 @@
+---
+title: "Weighted one-sided t test"
+author: "Ozan"
+date: "2023-02-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Weighted one-sided t test
+
+Weighted one sided t test was run with the `wtd.t.test` function included in the `weights` package
+
+```{r}
+#install.packages("weights")
+library(weights)
+```
+
+### vingette of wtd.t.test
+
+```{r}
+test <- c(1,1,1,1,1,1,2,2,2,3,3,3,4,4)
+t2 <- rev(test)+1
+weight <- c(.5,.5,.5,.5,.5,1,1,1,1,2,2,2,2,2)
+
+wtd.t.test(test, t2)
+wtd.t.test(test, t2, weight =weight)
+wtd.t.test(test, t2, weight, bootn = 1000)
+```
+
+### Sample data
+
+We created sample data which is represents Responder (r) and Non-Responder (nr) cells of study.
+
+`wei` function is the weight of the i-th patient was given by
+
+![](images/paste-CB6D4EB5.png){width="185"}
+
+with n~*i*~ denoting total number of cells in patient *i* P \<- c(4, 3) being the total number of patients in that group (R or NR).
+
+| Clusters | Responder cells | Non-Responder cells |
+|:--------:|:----------------|:--------------------|
+|   *1*    | 1000            | 1500                |
+|   *2*    | 2000            | 500                 |
+|   *3*    | 800             | 300                 |
+|   *4*    | 500             |                     |
+
+```{r}
+r <- c(1000, 2000, 800, 500)
+nr <- c(1500, 500, 300)
+
+wei<- function(vect){
+  wei_vec <- c()
+  for (i in 1:length(vect)) {
+    wei_vec[i] <- (vect[i]*(length(vect)/sum(vect)))
+    i <- i+1
+  }
+  print(wei_vec)
+  }
+```
+
+```{r}
+wtd.t.test(r, nr, weight=wei(r), weighty = wei(nr), samedata = F, alternative = "greater", mean1 = T, bootse = T, bootp = T, bootn = 2000)
+```
+
+Default version of function
+
+```{r}
+wtd.t.test(r, nr, weight=wei(r), weighty = wei(nr),samedata=TRUE,
+alternative="two.tailed", mean1=TRUE, bootse=FALSE, bootp=FALSE,
+bootn=1000, drops="pairwise")
+```
+
+Also there is correction for p values for the size of clusters with bootsrapping to original data;
+
+1.  each cluster *k* with size *uk*
+
+2.  randomly selecting *uk* number of cells
+
+3.  computing the p value
+
+4.  repeating this for 2000-3000 iterations.
+
+Our approach for **obj2**, creating an analogy for simplifying the complexity of article's data and method.
+
+## 
