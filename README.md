@@ -31,7 +31,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="logo.png" alt="Logo" width="80" height="80">
+    <img src="logo.png" alt="Logo" width="120" height="120">
   </a>
 
   <h3 align="center">cellstatemapping</h3>
@@ -44,9 +44,10 @@
     <br />
     <a href="https://github.com/ozangocmen/cellstatemapping/wiki">View Demo</a>
     ·
-    <a href="https://github.com/ozangocmen/cellstatemapping/issues">Report Bug</a>
+    <a href="https://sites.google.com/view/tcellsdli/home?authuser=0&pli=1">Access to data</a>
     ·
-    <a href="https://sites.google.com/view/tcellsdli/home?authuser=0&pli=1">Access to public data</a>
+    <a href="https://github.com/ozangocmen/cellstatemapping/issues">Report Bug</a> 
+ 
   </p>
 </div>
 
