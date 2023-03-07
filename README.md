@@ -30,7 +30,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="[https://github.com/othneildrew/Best-README-Template](https://www.notion.so/ozangocmen/GQA-BI-4d189b288fa74a2dbb6df81cf47ea76d)">
     <img src="logo.png" alt="Logo" width="120" height="120">
   </a>
 
@@ -83,12 +83,15 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
+<div align="center">
+  
 ![image](https://user-images.githubusercontent.com/93273911/223136326-928f1c14-f25c-41cc-b212-74789e5e5e4f.png)
+  
+</div>
+<p>
+This repository's purpose is developing a stand alone package which will reveal cancer associated immune cells states with unsupervised machine learning algorithms. Here methods are derived from this paper: _Bachireddy et. al. (2021). Mapping the evolution of T cell states during response and resistance to adoptive cellular therapy. Cell Reports, 37(6), 109992._ https://doi.org/10.1016/j.celrep.2021.109992</p> 
 
-This repository's purpose is developing a stand alone package which will reveal cancer associated immune cells states with unsupervised machine learning algorithms. Here methods are derived from this paper: _Bachireddy et. al. (2021). Mapping the evolution of T cell states during response and resistance to adoptive cellular therapy. Cell Reports, 37(6), 109992._ https://doi.org/10.1016/j.celrep.2021.109992 
-
-Software included mainly R and Python functions. 
+<p>Software included mainly R and Python functions.</p>
 
 ### Dependencies
 1.
