@@ -39,14 +39,14 @@
   <p align="center">
     An amazing method compilation for reveal cancer associated immune cells states
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    <a href="https://www.cell.com/cell-reports/fulltext/S2211-1247(21)01471-6?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS2211124721014716%3Fshowall%3Dtrue"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <a href="https://github.com/ozangocmen/cellstatemapping/wiki">View Demo</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>
+    <a href="https://github.com/ozangocmen/cellstatemapping/issues">Report Bug</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a>
+    <a href="https://sites.google.com/view/tcellsdli/home?authuser=0&pli=1">Access to public data</a>
   </p>
 </div>
 
