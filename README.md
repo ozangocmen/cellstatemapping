@@ -94,7 +94,15 @@ This repository's purpose is developing a stand alone package which will reveal 
 <p>Software included mainly R and Python functions.</p>
 
 ### Dependencies
-1.
+The following packages are required to run the demo notebooks. They are also specified in ```Prerequisites```.
+```
+matplotlib
+numpy
+pandas
+torch
+pyro-ppl
+tqdm
+```
 
 **Objectives of cellstate_mapping**
 - Reproduce the results using non-PCA based, with annotation and interpretation of major common factors.
