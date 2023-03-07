@@ -2,7 +2,7 @@
 <br />
 <div align="center">
   <a href="[https://github.com/othneildrew/Best-README-Template](https://www.notion.so/ozangocmen/GQA-BI-4d189b288fa74a2dbb6df81cf47ea76d)">
-    <img src="logo.png" alt="Logo" width="120" height="120">
+    <img src="logo.png" alt="Logo" width="175" height="175">
   </a>
 
   <h3 align="center">cellstatemapping</h3>
