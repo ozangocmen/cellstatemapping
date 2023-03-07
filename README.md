@@ -8,7 +8,7 @@
   <h3 align="center">cellstatemapping</h3>
 
   <p align="center">
-    Compilation for reveal cancer associated immune cells states
+    Compilation for revealing cancer associated immune cells states
     <br />
     <a href="https://www.cell.com/cell-reports/fulltext/S2211-1247(21)01471-6?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS2211124721014716%3Fshowall%3Dtrue"><strong>Explore the docs »</strong></a>
     <br />
