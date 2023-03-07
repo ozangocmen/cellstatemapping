@@ -37,7 +37,7 @@
   <h3 align="center">cellstatemapping</h3>
 
   <p align="center">
-    An amazing method for reveal cancer associated immune cells states.
+    An amazing method compilation for reveal cancer associated immune cells states
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
     <br />
