@@ -64,16 +64,6 @@ This repository's purpose is developing a stand alone package which will reveal 
 
 <p>Software included mainly R and Python functions.</p>
 
-### Dependencies
-The following packages are required to run the demo notebooks. They are also specified in ```Prerequisites```.
-```
-matplotlib
-numpy
-pandas
-torch
-pyro-ppl
-tqdm
-```
 
 **Objectives of cellstate_mapping**
 - Reproduce the results using non-PCA based, with annotation and interpretation of major common factors.
@@ -112,12 +102,17 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+### Dependencies
+The following packages are required to run the demo notebooks. 
 
+```
+matplotlib
+numpy
+pandas
+torch
+pyro-ppl
+tqdm
+```
 ### Installation
 
 _Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
