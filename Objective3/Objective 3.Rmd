@@ -40,7 +40,7 @@ bhatdist <- function(mat) {
   #create empty matrix: it'll be the result matrix
   #it's dimensions are nrow(mat)xnrow(mat)
   final_bhdist <- matrix(, nrow= nrow(mat), ncol=nrow(mat))
-  #need 2 loop
+  #need nested loop
   #1st: to select P 
   #2nd: make Bhat. calc with with q 
   
@@ -80,9 +80,6 @@ colnames(matr) <- c("Gene B","Gene M","Gene G","Gene L")
 matr
 ```
 
-```{r}
-bhatdist(matr)
-```
 ```{r}
 pheatmap(bhatdist(matr), display_numbers=T, color = colpal)
 ```
