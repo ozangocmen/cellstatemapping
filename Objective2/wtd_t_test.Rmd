@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 Weighted one sided t test was run with the `wtd.t.test` function included in the `weights` package
 
 ```{r}
-#install.packages("weights")
+install.packages("weights")
 library(weights)
 ```
 
