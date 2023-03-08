@@ -157,7 +157,8 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Ozan Gocmen - ozanngocmen@gmail.com
+<p>Ozan Gocmen - ozanngocmen@gmail.com</p>
+<p>Ebru Kocakaya</p> 
 
 Project Link: [https://github.com/ozangocmen/cellstatemapping](https://github.com/ozangocmen/cellstatemapping)
 
