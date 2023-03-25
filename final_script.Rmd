@@ -1,0 +1,214 @@
+---
+title: "final markdown"
+author: "Ozan"
+date: "2023-03-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# BIGQA - CM Markdown file
+
+## Importing libraries and functions from source
+
+```{r}
+library(Seurat)
+library(tidyverse)
+source("https://raw.githubusercontent.com/yasinkaymaz/BIGQA-CM/main/BIGQA-WP1-functions.R")
+```
+
+## Loading data
+
+Original data contains whole datasets and cells and there is a subset of whole dataset thats volume is 2K cells.
+
+**SOW-1** <https://drive.google.com/drive/folders/1yvK1RHT4fut96rFHQkHdrQGmqsxvThrw>
+
+```{r}
+#Load original data 
+#seuObj <- readRDS("C:/Users/OZAN//Downloads/Bachireddy.all.tcells.seurat.rds")
+#Load 2K cells subsample data:
+seu <- readRDS("C:/Users/OZAN/Downloads/downsampled.2K.Bachireddy.all.tcells.seurat.rds")
+```
+
+## Alternative ways
+
+#### 1. BISCUIT dataset loading process for 1K cell
+
+```{r}
+bis_data <- read.delim("~/Downloads/1000Tcells.biscuitNormalized.gem.txt",header = TRUE, sep = "\t", row.names = 1)
+seu <- CreateSeuratObject(counts=bis_data, project="bisc", min.cells = 3, min.features = 200)
+seu_info<- data.frame(read.delim("~/Downloads/1000Tcells_labels.txt", header = TRUE, sep = "\t"))
+View(seu_info)
+rownames(seu_info) <- seu_info[,1]
+seu_info <- seu_info[,2:1000]
+```
+
+#### 2. Seurat processing
+
+**Download raw count matrix**
+
+<https://drive.google.com/drive/folders/1vMHAPbBSRouoyRymJ0cFdH1OBooYmK9f> **Note:** Cells were down-sampled to 1000 to recapitulate the method in the Bachireddy et al.
+
+```{r}
+cnt_b1 <- read.csv("/Users/yasinkaymaz/Documents/BIGQAWP1/cmlnf_B1_dense.csv", header=T, row.names = 1)
+cnt_b1 <- t(cnt_b1[sample(nrow(cnt_b1), 1000), ])
+seub1 <- CreateSeuratObject(counts = cnt_b1, project = "B01", min.cells = 3, min.features = 200)
+seub1@meta.data$Outcome <- c("Responder")
+seub1@meta.data$Pid <- c("5310")
+seub1@meta.data$sampid <- c("B01")
+seub1@meta.data$time <- c("pre")
+rm(cnt_b1)
+gc()
+cnt_b3 <- read.csv("/Users/yasinkaymaz/Documents/BIGQAWP1/cmlnf_B3_dense.csv", header=T, row.names = 1)
+cnt_b3 <- t(cnt_b3[sample(nrow(cnt_b3), 1000), ])
+seub3 <- CreateSeuratObject(counts = cnt_b3, project = "B03", min.cells = 3, min.features = 200)
+seub3@meta.data$Outcome <- c("Non-Responder")
+seub3@meta.data$Pid <- c("5322")
+seub3@meta.data$sampid <- c("B03")
+seub3@meta.data$time <- c("pre")
+head(seub3@meta.data)
+rm(cnt_b3)
+gc()
+#Standard data processing by Seurat
+seu <- merge(seub1, y = seub3, add.cell.ids = c("B01", "B03"), project = "DLIstudy")
+rm(seub1, seub3);gc()
+seu <- NormalizeData(seu, normalization.method = "LogNormalize", scale.factor = 10000)
+seu <- FindVariableFeatures(seu, selection.method = "vst", nfeatures = 2000)
+all.genes <- rownames(seu)
+seu <- ScaleData(seu, features = all.genes)
+seu <- RunPCA(seu, features = VariableFeatures(object = seu))
+seu <- FindNeighbors(seu, dims = 1:10)
+seu <- FindClusters(seu, resolution = 0.5)
+seu <- RunUMAP(seu, dims = 1:10)
+DimPlot(seu, reduction = "umap", group.by = "Outcome")
+DimPlot(seu, reduction = "pca", group.by = "Outcome")
+rm(all.genes);gc()
+
+```
+
+## CODE APPLICATION
+
+### Geneset importing
+
+**Note:** The complete gene set list used in the paper can be downloaded from here: <https://drive.google.com/drive/folders/1yvK1RHT4fut96rFHQkHdrQGmqsxvThrw> `figure_1e_genesets.rds`
+
+Instead of `figure_1e_genesets.rds` I used to pro inflammatory `GS.proinf.txt` geneset
+
+```{r}
+#Import the gene sets
+gs1 <- read.delim("C:/Users/OZAN/Desktop/GS.proinf.txt", header = F)
+gs1$V1
+```
+
+### Common Factor Analysis
+
+Objective 1
+
+```{r}
+#Compute the CFA and correlations with mean Gene set expressions
+cfaCor.test <- RunCFA_GScors(GEM = seu[["RNA"]]@data[, sample(ncol(seu[["RNA"]]@data), )], Gs = gs1$V1)
+saveRDS(cfaCor.test, file = "C:/Users/OZAN/Desktop/final/cfaCor.test.rds")
+#Modify Seurat object for further investigation
+seu@meta.data <- cbind(seu@meta.data, cfaCor.test$Factors)
+seu@meta.data %>% ggplot(aes(Factor1, Factor2, color=seu@meta.data$patient_response))+geom_point()
+```
+
+```{r}
+seu@meta.data %>% ggplot(aes(Factor1, Factor3, color=seu@meta.data$patient_response))+geom_point()
+```
+
+Permutation test
+
+```{r}
+#Permutation test for observed correlation coefficients 
+test.f1 <- permutationTest(Obs.cor = cfaCor.test[1]$FactCors[1], #For only first factor. Repeat for others.
+                           GEM=seu[["RNA"]]@data, 
+                           Factor=seu@meta.data$Factor1,
+                           Gs = gs1$V1)
+test.f1$p_val
+hist(test.f1$Ncd)
+#abline(v=cfaCor.test[1]$FactCors[1], lwd=3, col="red")
+
+test.f2 <- permutationTest(Obs.cor = cfaCor.test[2]$FactCors[2], #For only first factor. Repeat for others.
+                           GEM=seu[["RNA"]]@data, 
+                           Factor=seu@meta.data$Factor2,
+                           Gs = gs1$V1)
+test.f2$p_val
+hist(test.f2$Ncd)
+#abline( v=cfaCor.test[2]$FactCors[2], lwd=3, col="blue")
+
+test.f3 <- permutationTest(Obs.cor = cfaCor.test[3]$FactCors[3], #For only first factor. Repeat for others.
+                           GEM=seu[["RNA"]]@data, 
+                           Factor=seu@meta.data$Factor3,
+                           Gs = gs1$V1)
+test.f3$p_val
+hist(test.f3$Ncd)
+#abline( v=cfaCor.test[3]$FactCors[3], lwd=3, col="green")
+
+```
+
+### Weighted one-sided t test
+
+Objective 2
+
+```{r}
+library(weights)
+#source("https://raw.githubusercontent.com/yasinkaymaz/BIGQA-CM/main/BIGQA-WP1-functions.R")
+#The link to the seurat object is here: https://drive.google.com/drive/folders/1yvK1RHT4fut96rFHQkHdrQGmqsxvThrw 
+#seuObj <- readRDS("Bachireddy.all.tcells.seurat.rds")
+#Figure 2B is for only Pre-DLI samples. Therefore, need to subset.
+Pre_samples <- c("B1", "B3", "B5", "B7", "B9", "B17", "B19", "B21", "B23", "B25", "B27")
+seu.sub <- seu@meta.data %>% filter(sample_id %in% Pre_samples)
+cluster_ratioStats <- WeiTtest(Pid = seu.sub$patient_response,
+                               Groups = seu.sub$Group,
+                               Clusters = seu.sub$cluster_id,
+                               nTry = 2000, N_r = 6, N_nr = 5,
+                               GroupNames = c("R", "NR"))
+#Example plot similar to Figure 2B - cluster 4
+cluster_ratioStats@ratios %>% 
+  filter(Cluster == 4) %>% 
+  ggplot(aes(Groups, koi, fill=Groups))+geom_boxplot()+
+  ylab("Proportion of cells Pre-DLI")
+```
+
+### Meta-clusters
+
+Objective 3
+
+```{r}
+#library(Seurat)
+#library(tidyverse)
+library(pheatmap)
+source("~/Downloads/BIGQA-CM-main-2/BIGQA-WP1-functions.R")
+#The link to the seurat object is here: https://drive.google.com/drive/folders/1yvK1RHT4fut96rFHQkHdrQGmqsxvThrw 
+#seuObj <- readRDS("Bachireddy.all.tcells.seurat.rds")
+#Clusters to examine:
+cls <- names(table(seuObj@meta.data$cluster_id))#These are all Biscuit clusters from the paper. Stores redundancy. 
+# or optionally a small subset
+cls <- c(1, 7, 14, 2)
+#To create the clusters distance matrix, cdf, run this wrapper function:
+cdm <- ClusterDistances(seu = seuObj, cls_list = cls)
+#' To visually inspect the distances on a heatmap (any alternative to pheatmap can work)
+pheatmap::pheatmap(cdm)
+```
+
+```{r}
+#' Once Meta-clusters are defined, the `meta.data` can be modified to add a `meta_cluster` column.
+#' Then, the function `WeiTtest` can be run on "All" samples. 
+cluster_ratioStats <- WeiTtest(Pid = seu$patient_response,
+                               Groups = seu$Group,
+                               Clusters = seu$meta_cluster,
+                               nTry = 2000, N_r = 6, N_nr = 5,
+                               GroupNames = c("R", "NR"))
+#Example plot similar to Figure 2C - meta-cluster 1 (MC1: combination of 19th and 29th clusters. Note: There is a type in the manuscript. MC1 should have 29 instead of 28. Check Sup.Fig3C)
+cluster_ratioStats@ratios %>% 
+  filter(Cluster == 'MC1_19_29') %>% 
+  ggplot(aes(Groups, koi, fill=Groups))+geom_boxplot()+
+  ylab("Proportion of cells")
+```
+
+```{python}
+
+```
