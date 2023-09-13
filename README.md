@@ -116,7 +116,7 @@ Project Link: [https://github.com/ozangocmen/cellstatemapping](https://github.co
 
 
 
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments 
+<!-- ACKNOWLEDGEMENTS -->
+## Acknowledgements 
 
 
