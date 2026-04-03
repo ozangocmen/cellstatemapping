@@ -1,5 +1,7 @@
-# Cell State Mapping
-
+# Cell State Mapp
+<div align="center">
+<img src="logo.png" style="background-color: white; padding: 10px;" width="300" >
+    </div>
 Reveal cancer-associated immune cell states using unsupervised machine learning and statistical modeling. Derived from [Bachireddy et al. (2021) *Cell Reports*](https://doi.org/10.1016/j.celrep.2021.109992).
 
 This repository has been newly refactored into a production-ready Python package, completely translating the original R-based methodology.
