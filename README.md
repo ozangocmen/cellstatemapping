@@ -1,122 +1,111 @@
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="[https://github.com/othneildrew/Best-README-Template](https://www.notion.so/ozangocmen/GQA-BI-4d189b288fa74a2dbb6df81cf47ea76d)">
-    <img src="logo.png" alt="Logo" width="175" height="175">
-  </a>
+# Cell State Mapping
 
-  <h3 align="center">cellstatemapping</h3>
+Reveal cancer-associated immune cell states using unsupervised machine learning and statistical modeling. Derived from [Bachireddy et al. (2021) *Cell Reports*](https://doi.org/10.1016/j.celrep.2021.109992).
 
-  <p align="center">
-    Compilation for revealing cancer associated immune cells states
-    <br />
-    <a href="https://www.cell.com/cell-reports/fulltext/S2211-1247(21)01471-6?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS2211124721014716%3Fshowall%3Dtrue"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/ozangocmen/cellstatemapping/wiki">View Demo</a>
-    ·
-    <a href="https://sites.google.com/view/tcellsdli/home?authuser=0&pli=1">Access to data</a>
-    ·
-    <a href="https://github.com/ozangocmen/cellstatemapping/issues">Report Bug</a> 
- 
-  </p>
-</div>
+This repository has been newly refactored into a production-ready Python package, completely translating the original R-based methodology.
 
+> **Note:** The original R scripts have been moved to the `legacy/` directory and are no longer maintained.
 
+## Features
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+- **Common Factor Analysis (CFA)**: Maximum Likelihood Estimation (MLE) and varimax rotation to derive coherent gene expression modules.
+- **Permutation Testing**: Evaluate empirical significance of factor correlations with specific gene sets.
+- **Weighted T-Tests**: Handle imbalanced groups (e.g., Responder vs Non-Responder) with patient-adjusted weights and bootstrap FDR correction.
+- **Meta-Clustering**: Pairwise Bhattacharyya distance metrics to merge and evaluate related cell clusters.
 
+## Installation
 
+Ensure you have Python 3.9+ installed.
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
-<div align="center">
-  
-![image](https://user-images.githubusercontent.com/93273911/223136326-928f1c14-f25c-41cc-b212-74789e5e5e4f.png)
-  
-</div>
-<p>
-This repository's purpose is developing a stand alone package which will reveal cancer associated immune cells states with unsupervised machine learning algorithms. Here methods are derived from this paper: Bachireddy et. al. (2021). Mapping the evolution of T cell states during response and resistance to adoptive cellular therapy. Cell Reports, 37(6), 109992._ https://doi.org/10.1016/j.celrep.2021.109992</p> 
-
-<p>Software included mainly R and Python functions.</p>
-
-
-**Objectives of cellstate_mapping**
-- Reproduce the results using non-PCA based, with annotation and interpretation of major common factors.
-- Inspect whether the non-responsive patients are driven by common or different resistance mechanisms in datasets.
-- Creating a meta-clustering scheme to account for within-cluster variability. 
-- The implementation of a GP regression model.
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-<!-- GETTING STARTED -->
-## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
-
-### Dependencies
-The following packages are required to run the demo notebooks. 
-
-```
-numpy
-pandas
-torch
-pyro-ppl
-tqdm
+```bash
+git clone https://github.com/ozangocmen/cellstatemapping.git
+cd cellstatemapping
+pip install .
 ```
 
+To install development dependencies (testing, formatting):
+```bash
+pip install .[dev]
+```
 
-<!-- LICENSE -->
-## License
+## Quickstart (CLI)
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+The package provides a powerful Command Line Interface for direct execution without writing code.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+**Run the full end-to-end pipeline:**
+```bash
+cellstatemapping run \
+    --input data/patient1_counts.csv \
+    --input data/patient2_counts.csv \
+    --gene-set data/GS.proinf.txt \
+    --metadata data/cell_metadata.csv \
+    --groups Responder NonResponder \
+    --output results_dir/
+```
 
+**Run only Common Factor Analysis:**
+```bash
+cellstatemapping cfa --gem expression.csv --gene-set GS.txt --n-factors 3
+```
 
+**Run only Weighted T-Tests:**
+```bash
+cellstatemapping test --metadata meta.csv --groups R NR --n-bootstrap 3000
+```
 
-<!-- CONTACT -->
-## Contact
+## Python API Usage
 
-<p>Ozan Gocmen - ozanngocmen@gmail.com</p>
+You can also orchestrate the analysis using the robust Python API.
 
+```python
+from cellstatemapping import CellStateMappingPipeline
 
-Project Link: [https://github.com/ozangocmen/cellstatemapping](https://github.com/ozangocmen/cellstatemapping)
+pipeline = CellStateMappingPipeline(output_dir="results/", n_factors=3)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+# 1. Load data
+pipeline.load_data(
+    expression_files=["patient1.csv", "patient2.csv"],
+    gene_set_file="GS.txt",
+    metadata_file="metadata.csv"
+)
 
+# 2. Preprocess (log-normalize, select variable features)
+pipeline.preprocess(n_variable_features=2000)
 
+# 3. Factor Analysis
+pipeline.run_factor_analysis()
 
-<!-- ACKNOWLEDGEMENTS -->
-## Acknowledgements 
+# 4. Statistical significance tests
+pipeline.run_permutation_tests(n_permutations=500)
+pipeline.run_weighted_tests(group_names=("Responder", "NonResponder"))
 
+# 5. Meta-clustering
+pipeline.compute_metaclusters()
 
+# Save everything
+pipeline.save_results()
+```
+
+## Core Modules
+
+If you'd like to use individual statistical components independently:
+
+- `cellstatemapping.preprocessing`: Log-normalization (matches Seurat) and sampling
+- `cellstatemapping.cfa`: `run_cfa`, `correlate_factors_with_geneset`
+- `cellstatemapping.stats`: `weighted_t_test`, `compute_patient_weights`
+- `cellstatemapping.distance`: `bhattacharyya_distance`, `compute_distance_matrix`
+
+## Citation
+
+```bibtex
+@article{bachireddy2021mapping,
+  title={Mapping the evolution of T cell states during response and resistance to adoptive cellular therapy},
+  author={Bachireddy, P. and others},
+  journal={Cell Reports},
+  volume={37},
+  number={6},
+  pages={109992},
+  year={2021},
+  publisher={Elsevier}
+}
+```

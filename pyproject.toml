@@ -1,0 +1,76 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cellstatemapping"
+version = "1.0.0"
+description = "Reveal cancer-associated immune cell states using unsupervised machine learning and statistical modeling."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "Ozan Gocmen", email = "ozanngocmen@gmail.com"},
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "numpy>=1.23.0",
+    "pandas>=1.5.0",
+    "scipy>=1.9.0",
+    "statsmodels>=0.13.0",
+    "scikit-learn>=1.1.0,<1.6",
+    "factor-analyzer>=0.5.0",
+    "click>=8.0.0",
+    "matplotlib>=3.6.0",
+    "seaborn>=0.12.0",
+    "tqdm>=4.64.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "flake8>=6.0",
+    "black>=23.0",
+    "mypy>=1.0",
+]
+
+[project.scripts]
+cellstatemapping = "cellstatemapping.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/ozangocmen/cellstatemapping"
+Documentation = "https://github.com/ozangocmen/cellstatemapping/wiki"
+Repository = "https://github.com/ozangocmen/cellstatemapping"
+Issues = "https://github.com/ozangocmen/cellstatemapping/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+cellstatemapping = ["data/*.csv", "data/*.txt"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
